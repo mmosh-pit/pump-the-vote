@@ -32,7 +32,7 @@ const MemberCard = ({ user }: Props) => {
   return (
     <div
       className="flex bg-[#030007] bg-opacity-40 px-2 py-2 rounded-2xl"
-      id="border-gradient-container"
+      id="border-red"
       key={user.profile.username}
     >
       <div className="self-center max-w-[30%] mr-8">

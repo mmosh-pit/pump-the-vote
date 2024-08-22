@@ -68,7 +68,7 @@ const MembersList = () => {
   return (
     <div className="flex w-full flex-col" id="members">
       <div className="w-full flex justify-between px-4">
-        <p className="text-white text-base">
+        <p className="text-gray-500 text-lg">
           Members <span className="text-gray-500"></span>
         </p>
 

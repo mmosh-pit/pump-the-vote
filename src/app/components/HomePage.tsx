@@ -1,15 +1,17 @@
 import * as React from "react";
 import { useAtom } from "jotai";
 
-import { data, isDrawerOpen } from "@/store";
-import Banner from "./common/Banner";
+import { isDrawerOpen } from "@/store";
 import MembersList from "./Home/MembersList";
 import CoinsList from "./Home/CoinsList";
-import HomeSearch from "./Home/HomeSearch";
+import SearchIcon from "@/assets/icons/SearchIcon";
 
 const HomePage = () => {
-  const [currentUser] = useAtom(data);
   const [isDrawerShown] = useAtom(isDrawerOpen);
+
+  const [searchText, setSearchText] = React.useState("");
+
+  const executeSearch = React.useCallback(() => {}, []);
 
   return (
     <div
@@ -17,29 +19,62 @@ const HomePage = () => {
         isDrawerShown ? "z-[-1]" : ""
       }`}
     >
-      <Banner />
-      <div className="self-center md:max-w-[50%] max-w-[80%]">
-        <h5 className="text-center text-white font-goudy font-normal mb-[3vmax] mt-[1vmax]">
-          {currentUser?.profile?.name
-            ? `Welcome Home, ${currentUser?.profile?.name}`
-            : "Howdy Stranger!"}
-        </h5>
+      <div className="flex md:flex-row justify-between items-center w-full mt-16 px-4">
+        <div className="flex">
+          <div className="flex items-center bg-[#F4F4F4] bg-opacity-[0.15] border-[1px] border-[#C2C2C230] rounded-full p-1 backdrop-filter backdrop-blur-[5px]">
+            <div className="bg-[#3C00FF] rounded-full px-8 py-4">
+              <p className="text-white font-bold text-base">PTV Price</p>
+            </div>
+            <p className="text-white font-bold text-base ml-4 px-8">$ 12</p>
+          </div>
 
-        <p className="text-center text-base">
-          {currentUser?.profile?.name
-            ? "A MMOSH is a decentralized, permissionless and composable virtual world available through various access devices and software platforms"
-            : "Welcome to MMOSH, the social protocol for connected communities. Make Money Fun!"}
-        </p>
+          <div className="flex items-center mx-4 bg-[#F4F4F4] bg-opacity-[0.15] border-[1px] border-[#C2C2C230] rounded-full p-1 backdrop-filter backdrop-blur-[5px]">
+            <div className="bg-[#3C00FF] rounded-full px-8 py-4">
+              <p className="text-white font-bold text-base">PTV FDV</p>
+            </div>
+            <p className="text-white font-bold text-base ml-4 px-8">$ 234,2</p>
+          </div>
+
+          <div className="flex items-center bg-[#F4F4F4] bg-opacity-[0.15] border-[1px] border-[#C2C2C230] rounded-full p-1 backdrop-filter backdrop-blur-[5px]">
+            <div className="bg-[#3C00FF] rounded-full px-8 py-4">
+              <p className="text-white font-bold text-base">PTV TVL</p>
+            </div>
+            <p className="text-white font-bold text-base ml-4 px-8">$ 232</p>
+          </div>
+        </div>
+
+        <h4 className="text-center text-white font-goudy font-normal  self-center">
+          Leaderboard
+        </h4>
+
+        <div className="w-[33%]">
+          <div className="flex items-center bg-[#01062326] border-[1px] border-[#C2C2C230] rounded-full p-1 backdrop-filter backdrop-blur-[5px]">
+            <button
+              className="flex bg-[#3C00FF] rounded-full p-2 items-center"
+              onClick={executeSearch}
+            >
+              <SearchIcon />
+            </button>
+
+            <input
+              placeholder="Type your search terms"
+              className="ml-4 w-full bg-transparent outline-none"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  executeSearch();
+                }
+              }}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="lg:w-[20%] md:w-[30%] sm:w-[40%] w-[50%] self-center flex justify-center my-8">
-        <HomeSearch placeholder="Type your search terms" />
-      </div>
-
-      <div className="w-full flex md:flex-row flex-col justify-between mt-8 overflow-y-auto md:max-h-[600px] pb-12 py-8">
-        <MembersList />
-
+      <div className="w-full flex md:flex-row flex-col justify-between mt-8 overflow-y-auto md:max-h-[70%] pb-12 py-8">
         <CoinsList />
+
+        <MembersList />
       </div>
     </div>
   );

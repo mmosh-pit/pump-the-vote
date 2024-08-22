@@ -16,34 +16,15 @@ import {
   incomingWallet,
   isDrawerOpen,
   points,
-  searchBarText,
-  settings,
   status,
   userWeb3Info,
   web3InfoLoading,
 } from "@/store";
 import useCheckMobileScreen from "@/lib/useCheckMobileScreen";
-import SearchIcon from "@/assets/icons/SearchIcon";
 import MobileDrawer from "./MobileDrawer";
 import { Connectivity as UserConn } from "../../anchor/user";
 import { web3Consts } from "@/anchor/web3Consts";
 import { Connection } from "@solana/web3.js";
-
-const formatNumber = (value: number) => {
-  const units = ["", "K", "M", "B", "T"];
-
-  let absValue = Math.abs(value);
-
-  let exponent = 0;
-  while (absValue > 1000 && exponent < units.length - 1) {
-    absValue /= 1000;
-    exponent++;
-  }
-
-  const formattedNumber = absValue.toFixed(2);
-
-  return `${formattedNumber}${units[exponent]}`;
-};
 
 const Header = () => {
   const pathname = usePathname();
@@ -54,13 +35,10 @@ const Header = () => {
   const [___, setIsLoadingProfile] = useAtom(web3InfoLoading);
   const [userStatus] = useAtom(status);
   const [currentUser, setCurrentUser] = useAtom(data);
-  const [isOnSettings, setIsOnSettings] = useAtom(settings);
-  const [totalAccounts, setTotalAccounts] = useAtom(accounts);
+  const [____, setTotalAccounts] = useAtom(accounts);
   const [incomingWalletToken, setIncomingWalletToken] = useAtom(incomingWallet);
   const [isDrawerShown] = useAtom(isDrawerOpen);
-  const [totalRoyalties, setTotalRoyalties] = useAtom(points);
-  const [_, setSearchText] = useAtom(searchBarText);
-  const [localText, setLocalText] = React.useState("");
+  const [_____, setTotalRoyalties] = useAtom(points);
   const isMobileScreen = useCheckMobileScreen();
 
   const getHeaderBackground = React.useCallback(() => {
@@ -69,19 +47,14 @@ const Header = () => {
 
     if (pathname.includes("create")) {
       defaultClass += "bg-black bg-opacity-[0.56] backdrop-blur-[10px]";
-    } else if (pathname !== "/" || isOnSettings) {
+    } else if (pathname !== "/") {
       defaultClass += "bg-white bg-opacity-[0.07] backdrop-blur-[2px]";
-    } else if (pathname === "/" && !isOnSettings) {
+    } else if (pathname === "/") {
       defaultClass += "bg-black bg-opacity-[0.56] backdrop-blur-[2px]";
     }
 
     return defaultClass;
   }, [userStatus, pathname]);
-
-  const executeSearch = React.useCallback(() => {
-    const text = localText.replace("@", "");
-    setSearchText(text);
-  }, [localText]);
 
   const getTotals = React.useCallback(async () => {
     const res = await axios.get("/api/get-header-analytics");
@@ -224,51 +197,23 @@ const Header = () => {
                 className="text-base text-white cursor-pointer"
                 onClick={() => router.replace("/")}
               >
-                Home
-              </a>
-
-              <a
-                target="_blank"
-                href="https://www.mmosh.ai"
-                className="text-base text-white cursor-pointer"
-              >
-                Website
+                Leaderboard
               </a>
 
               <a
                 className="text-base text-white cursor-pointer"
-                onClick={() => {
-                  router.push("/create");
-                }}
-              >
-                Create
-              </a>
-
-              <a
-                className="text-base text-white cursor-pointer"
-                onClick={() => {
-                  router.push("/create");
-                }}
-              >
-                Members
-              </a>
-
-              <a
-                className="text-base text-white cursor-pointer"
-                onClick={() => {
-                  router.push("/create/communities");
-                }}
-              >
-                Communities
-              </a>
-
-              <a
-                className="text-base text-white cursor-pointer"
-                onClick={() => {
-                  router.push("/create/coins");
-                }}
+                onClick={() => router.push("/create/coins")}
               >
                 Coins
+              </a>
+
+              <a
+                className="text-base text-white cursor-pointer"
+                onClick={() => {
+                  router.push("/create");
+                }}
+              >
+                Creators
               </a>
 
               <a
@@ -280,17 +225,41 @@ const Header = () => {
                 Swap
               </a>
 
-              {currentUser?.profilenft && (
-                <a
-                  className="text-base text-white cursor-pointer"
-                  onClick={() => {
-                    if (isOnSettings) return setIsOnSettings(false);
-                    router.push(`/${currentUser?.profile.username}`);
-                  }}
-                >
-                  My Profile
-                </a>
-              )}
+              <a
+                className="text-base text-white cursor-pointer"
+                onClick={() => {
+                  router.push("/create");
+                }}
+              >
+                ATM
+              </a>
+
+              <a
+                className="text-base text-white cursor-pointer"
+                onClick={() => {
+                  router.push("/create/create_coin");
+                }}
+              >
+                Create
+              </a>
+
+              <a
+                className="text-base text-white cursor-pointer"
+                onClick={() => {
+                  router.push("/create/create_profile");
+                }}
+              >
+                Join
+              </a>
+
+              <a
+                className="text-base text-white cursor-pointer"
+                onClick={() => {
+                  router.push("/create/create_profile");
+                }}
+              >
+                AI Bot
+              </a>
             </div>
           )}
 
@@ -324,87 +293,9 @@ const Header = () => {
                   : "Connect Wallet"}
               </p>
             </WalletMultiButton>
-
-            {userStatus === UserStatus.fullAccount &&
-              !isMobileScreen &&
-              currentUser?.telegram?.id && (
-                <button
-                  className="relative bg-[#03002B] px-6 py-3 rounded-xl ml-6"
-                  onClick={() => setIsOnSettings(true)}
-                >
-                  <p className="text-base text-white font-bold settings-btn">
-                    Settings
-                  </p>
-                </button>
-              )}
           </div>
         </div>
       </div>
-
-      {pathname === "/" && !isOnSettings && (
-        <div className="w-full flex justify-center lg:justify-between items-end mt-12 pb-4">
-          {!isMobileScreen && (
-            <div className="flex w-[33%]">
-              <div className="flex items-center bg-[#F4F4F4] bg-opacity-[0.15] border-[1px] border-[#C2C2C2] rounded-full p-1 backdrop-filter backdrop-blur-[5px]">
-                <div className="bg-[#3C00FF] rounded-full px-8 py-4">
-                  <p className="text-white font-bold text-base">
-                    Total Members
-                  </p>
-                </div>
-                <p className="text-white font-bold text-base ml-4 px-8">
-                  {totalAccounts}
-                </p>
-              </div>
-
-              <div className="flex items-center bg-[#F4F4F4] bg-opacity-[0.15] border-[1px] border-[#C2C2C2] rounded-full p-1 ml-8 backdrop-filter backdrop-blur-[5px]">
-                <div className="bg-[#3C00FF] rounded-full px-8 py-4">
-                  <p className="text-white font-bold text-base">
-                    Total Royalties
-                  </p>
-                </div>
-                <p className="text-white font-bold text-base ml-4 px-8">
-                  {formatNumber(totalRoyalties)}
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div
-            className={`relative w-[16vmax] h-[16vmax] ${isDrawerShown && "z-[-1]"}`}
-          >
-            <Image
-              src="https://storage.googleapis.com/hellbenders-public-c095b-assets/hellbendersWebAssets/mmosh_box.jpeg"
-              alt="mmosh"
-              layout="fill"
-            />
-          </div>
-
-          {!isMobileScreen && (
-            <div className="w-[33%] flex items-center bg-[#F4F4F4] bg-opacity-[0.15] border-[1px] border-[#C2C2C2] rounded-full p-1 backdrop-filter backdrop-blur-[5px]">
-              <button
-                className="flex bg-[#3C00FF] rounded-full px-12 py-4 items-center"
-                onClick={executeSearch}
-              >
-                <SearchIcon />
-
-                <p className="text-white font-bold text-base ml-4">Search</p>
-              </button>
-
-              <input
-                placeholder="Type your search terms"
-                className="ml-4 w-full bg-transparent outline-none"
-                value={localText}
-                onChange={(e) => setLocalText(e.target.value)}
-                onKeyUp={(e) => {
-                  if (e.key === "Enter") {
-                    executeSearch();
-                  }
-                }}
-              />
-            </div>
-          )}
-        </div>
-      )}
     </header>
   );
 };

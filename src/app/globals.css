@@ -305,11 +305,12 @@ h6 {
   mask-composite: exclude; /*5*/
 }
 
-#border-gradient-container {
-  position: relative;
-  box-shadow:
-    1px 2px 4px #ff00ae,
-    -0.2em 0 0.1em #0061ff;
+#border-blue {
+  border: 1px solid #0061ff;
+}
+
+#border-red {
+  border: 1px solid #ff0000;
 }
 
 #member-container-home {

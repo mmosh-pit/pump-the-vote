@@ -101,7 +101,7 @@ const CoinsList = () => {
   return (
     <div className="flex w-full flex-col" id="coins">
       <div className="w-full flex justify-between px-4">
-        <p className="text-white text-base">
+        <p className="text-gray-500 text-lg">
           Coins <span className="text-gray-500"></span>
         </p>
 
@@ -113,14 +113,14 @@ const CoinsList = () => {
         </a>
       </div>
       <div
-        className="w-full px-4 py-2 grid grid-cols-auto xs:grid-cols-1 xl:grid-cols-2 gap-8 mt-4"
+        className="w-full px-4 py-2 grid grid-cols-auto xs:grid-cols-1 xl:grid-cols-2 gap-12 mt-4 overflow-y-auto"
         ref={containerRef}
         onScroll={handleScroll}
       >
         {coins.map((coin) => (
           <div
             className="flex bg-[#030007] bg-opacity-40 px-2 py-2 rounded-2xl"
-            id="border-gradient-container"
+            id="border-blue"
             key={coin.symbol}
           >
             <div className="self-center max-w-[30%] mr-8">
