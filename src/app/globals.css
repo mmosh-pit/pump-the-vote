@@ -95,17 +95,6 @@ h6 {
   src: url("../assets/fonts/goudy_heavyface_bt.ttf");
 }
 
-.common-bg {
-  background: url("https://storage.googleapis.com/mmosh-assets/mmosh_background.png");
-  background-size: cover, auto;
-  background-repeat: no-repeat, repeat;
-  background-attachment: fixed;
-}
-
-.common-bg:before {
-  mix-blend-mode: color-dodge;
-}
-
 .bg-profile {
   background: rgba(0, 0, 0, 0.5),
     url("https://storage.googleapis.com/hellbenders-public-c095b-assets/hellbendersWebAssets/texture.png");
